@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# Caches / temp
+.cache/
+*.tmp
+*.swp
+*~
+.DS_Store
+
+# Logs
+*.log
+nohup.out
+
+# Experiment outputs
+bench_all_*/
+bench_newmodels_*/
+tau_norm_16f/
+tau_norm_32f/
+tau_norm_plots/
+mean_tau/
+tc_steering/
+tc_seed_jitter/
+results_*/
+aot_results/

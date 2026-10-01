@@ -1,0 +1,24 @@
+# Core
+torch>=2.1
+torchvision
+transformers>=4.49
+accelerate
+numpy
+tqdm
+matplotlib
+
+# Video / image IO
+av
+decord
+opencv-python
+pillow
+
+# Qwen-VL video preprocessing
+qwen-vl-utils
+
+# InternVL (trust_remote_code) dependencies
+timm
+einops
+
+# Optional but recommended (Qwen/InternVL loading uses flash_attention_2)
+# flash-attn
