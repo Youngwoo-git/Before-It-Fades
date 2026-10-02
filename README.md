@@ -1,5 +1,7 @@
 # Before It Fades: Reinforcing Temporal Representations at Inference Time in VideoLLMs
 
+[![arXiv](https://img.shields.io/badge/arXiv-2610.01595-b31b1b.svg)](https://arxiv.org/abs/2610.01595)
+
 > Video Large Language Models (VideoLLMs) receive frames in sequential order and
 > interpret how visual content evolves along the temporal axis, yet temporal
 > reasoning remains a persistent weakness across architectures. Reversing the frame
@@ -183,6 +185,27 @@ bench_chain $MODEL 16 "tc aot tv" --tau_profile $PROFILE --beta $BETA   # TAI
 
 Results are written as JSON under each `--output_dir`. See the header of
 [tai/tai_core.py](tai/tai_core.py) for the full argument reference.
+
+## Citation
+
+```bibtex
+@misc{shin2026fadesreinforcingtemporalrepresentations,
+      title={Before It Fades: Reinforcing Temporal Representations at Inference Time in VideoLLMs},
+      author={Youngwoo Shin and Yusung Ro and Minseo Kim and Junmo Kim},
+      year={2026},
+      eprint={2610.01595},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2610.01595},
+}
+
+@inproceedings{shin2026before,
+  title={Before It Fades: Reinforcing Temporal Representations at Inference Time in Video{LLM}s},
+  author={Youngwoo Shin and Yusung Ro and Minseo Kim and Junmo Kim},
+  booktitle={The Fortieth Annual Conference on Neural Information Processing Systems},
+  year={2026}
+}
+```
 
 ## License
 

@@ -91,7 +91,7 @@ def main():
     tau_profile = None
     if args.tau_profile and args.method == "tai":
         tau_profile, auto_src = load_tau_profile(args.tau_profile, clip_last=args.clip_last, inverse=args.inverse_tau)
-        # FIX: only use auto_src if user didn't specify --src_layer
+        # Use the profile peak as src_layer unless --src_layer is given explicitly
         if args.src_layer < 0:
             args.src_layer = auto_src
         else:

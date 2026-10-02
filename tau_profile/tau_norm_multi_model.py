@@ -1,12 +1,12 @@
 """
-Multi-Model τ Norm Analysis: Proving Universality of Mid-Layer Temporal Signal
-===============================================================================
+τ Profile Extraction
+====================
 Supports: Qwen2.5-VL, Qwen3-VL, InternVL2.5, InternVL3, Molmo2, Gemma4
 (ArrowRL-Qwen2.5-VL is handled through the Qwen family path.)
 
-Measures ||h_fwd - h_rev|| / ||h_fwd|| per layer to show temporal signal peaks
-at mid-to-late layers across ALL model families. Outputs per-model plots and a
-JSON τ profile consumed by the eval scripts (--tau_profile).
+Measures the relative temporal divergence ||h_fwd - h_rev|| / ||h_fwd|| per layer
+over forward/reversed video pairs. Outputs per-model plots and a JSON τ profile
+consumed by the eval scripts (--tau_profile).
 
 Usage:
     python tau_norm_multi_model.py \
