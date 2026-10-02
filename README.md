@@ -189,7 +189,7 @@ Results are written as JSON under each `--output_dir`. See the header of
 ## Citation
 
 ```bibtex
-@misc{shin2026fadesreinforcingtemporalrepresentations,
+@misc{shin2026before,
       title={Before It Fades: Reinforcing Temporal Representations at Inference Time in VideoLLMs},
       author={Youngwoo Shin and Yusung Ro and Minseo Kim and Junmo Kim},
       year={2026},
