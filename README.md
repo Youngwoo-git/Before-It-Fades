@@ -3,6 +3,8 @@
 <div align="center">
 
 [![arXiv](https://img.shields.io/badge/arXiv-2610.01595-b31b1b.svg)](https://arxiv.org/abs/2610.01595)&nbsp;
+[![NeurIPS](https://img.shields.io/badge/NeurIPS-2026-4b44ce.svg)](https://neurips.cc/virtual/2026/loc/sydney/poster/155460)&nbsp;
+[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Paper-yellow.svg)](https://huggingface.co/papers/2610.01595#6ac05ae4242cbc19f8801704)&nbsp;
 
 </div>
 
