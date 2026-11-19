@@ -23,7 +23,7 @@ Yes. The intermediate layers get it right, but the prediction falls back to No b
 
 - Oct 2, 2026: 🚀 Code released!
 
-- Oct 1, 2026: 📄 Paper release
+- Oct 1, 2026: 📄 Paper released!
 
 - Sep 25, 2026: 🎉 Before It Fades has been accepted to NeurIPS 2026. 🎉
 
