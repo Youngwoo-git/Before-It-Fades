@@ -1,48 +1,99 @@
 # Before It Fades: Reinforcing Temporal Representations at Inference Time in VideoLLMs
 
-[![arXiv](https://img.shields.io/badge/arXiv-2610.01595-b31b1b.svg)](https://arxiv.org/abs/2610.01595)
+<div align="center">
 
-> Video Large Language Models (VideoLLMs) receive frames in sequential order and
-> interpret how visual content evolves along the temporal axis, yet temporal
-> reasoning remains a persistent weakness across architectures. Reversing the frame
-> order of a video, a transformation that should invert temporal answers, often
-> leaves the final prediction unchanged. We investigate where this failure
-> originates by defining the temporal divergence vector $\tau_l$, the layer-wise
-> representational difference induced by reversing temporal order. Tracking its
-> magnitude across layers reveals a consistent temporal divergence profile where
-> the divergence peaks at intermediate layers and progressively diminishes toward
-> the output. We confirm this peak is specific to temporal reasoning and
-> functionally critical for predictions, establishing that VideoLLMs acquire
-> temporal information at intermediate layers but fail to maintain it to the
-> output. This progressive fading motivates our method, Temporal Activation
-> Injection (TAI), which extracts $\tau_l$ at the peak of the profile for each
-> input and reinjects it into subsequent layers following the measured decay. TAI
-> requires no training and consistently improves temporal reasoning across three
-> VideoLLMs and four benchmarks with negligible impact on non-temporal tasks.
+[![arXiv](https://img.shields.io/badge/arXiv-2610.01595-b31b1b.svg)](https://arxiv.org/abs/2610.01595)&nbsp;
 
-Model families currently auto-detected from the model name: **Qwen-VL, InternVL,
-Molmo2, Gemma4**. Any checkpoint from these families (HF hub id or local path) works
-out of the box, and other architectures can be supported by extending
-`detect_family` / `prepare_input` in [tai/tai_core.py](tai/tai_core.py).
+</div>
 
-## Installation
+<p align="center">
+<img src="assets/teaser.png" width=96%>
+</p>
+
+<p align="center">
+<i><b>The temporal answer is there, then it fades.</b> Reversing the video should flip the answer to
+Yes. The intermediate layers get it right, but the prediction falls back to No before the output.</i>
+</p>
+
+<br>
+
+## 📣 Update Logs
+
+- Oct 2, 2026: 🚀 Code released!
+
+- Oct 1, 2026: 📄 Paper release
+
+- Sep 25, 2026: 🎉 Before It Fades has been accepted to NeurIPS 2026. 🎉
+
+## 📝 Abstract
+
+Video Large Language Models (VideoLLMs) receive frames in sequential order and interpret how visual
+content evolves along the temporal axis, yet temporal reasoning remains a persistent weakness across
+architectures. Reversing the frame order of a video, a transformation that should invert temporal
+answers, often leaves the final prediction unchanged. We investigate where this failure originates by
+defining the temporal divergence vector $\tau_l$, the layer-wise representational difference induced
+by reversing temporal order. Tracking its magnitude across layers reveals a consistent temporal
+divergence profile where the divergence peaks at intermediate layers and progressively diminishes
+toward the output. We confirm this peak is specific to temporal reasoning and functionally critical
+for predictions, establishing that VideoLLMs acquire temporal information at intermediate layers but
+fail to maintain it to the output. This progressive fading motivates our method, Temporal Activation
+Injection (TAI), which extracts $\tau_l$ at the peak of the profile for each input and reinjects it
+into subsequent layers following the measured decay. TAI requires no training and consistently
+improves temporal reasoning across three VideoLLMs and four benchmarks with negligible impact on
+non-temporal tasks.
+
+### 🔍 Temporal Information Peaks, Then Fades
+
+<p align="center">
+<img src="assets/profile.png" width=96%>
+</p>
+
+**Temporal divergence profile** 📈: $\hat\tau_l$, the gap between the forward and the reversed video at
+layer $l$, peaks at intermediate layers for temporal questions only, and not for spatial or
+video-irrelevant ones **(a)**.
+
+**Functionally critical** 🎯: blocking the last token from attending to the preceding positions drops
+the probability of the correct answer the most at the peak layers **(b)**.
+
+### 💡 Temporal Activation Injection (TAI): Reinforce It Before It Fades
+
+<p align="center">
+<img src="assets/method.png" width=90%>
+</p>
+
+**Extract** ✂️: the reversed input runs only up to the source layer at the peak of the profile and
+exits early. $\tau_{steer}$ is the difference between the last tokens of the forward and the reversed
+input there.
+
+**Inject** 💉: every later layer adds $\tau_{steer}$, weighted by the measured decay of the profile,
+$h_l' = h_l + \beta \cdot w_l \cdot \tau_{steer}$. No training, a single forward pass on the original
+video.
+
+## 🧩 Supported Models
+
+Model families currently auto-detected from the model name: **Qwen-VL, InternVL, Molmo2, Gemma4**.
+Any checkpoint from these families (HF hub id or local path) works out of the box, and other
+architectures can be supported by extending `detect_family` / `prepare_input` in
+[tai/tai_core.py](tai/tai_core.py).
+
+## 🛠️ Installation
 
 ```bash
-git clone https://github.com/Youngwoo-git/before-it-fades.git
-cd before-it-fades
+git clone https://github.com/Youngwoo-git/Before-It-Fades.git
+cd Before-It-Fades
 pip install -r requirements.txt
 ```
 
 `flash-attn` is optional but recommended (Qwen/InternVL are loaded with
 `attn_implementation="flash_attention_2"`).
 
-## Quick start
+## ⚡ Quick Start
 
 Open [tutorial.ipynb](tutorial.ipynb): profile extraction, model loading, and a
 baseline-vs-TAI comparison on your own video in four short steps
 (Qwen2.5-VL-7B is used as the running example).
 
-## Data setup
+## 📦 Data Setup
 
 - [TempCompass](https://github.com/llyx97/TempCompass) · [AoTBench](https://huggingface.co/datasets/sherryxzh/AoTBench) · [TVBench](https://huggingface.co/datasets/FunAILab/TVBench) · [MVBench](https://huggingface.co/datasets/OpenGVLab/MVBench)
 
@@ -99,7 +150,9 @@ uses the `"direction"` entries and pairs `<id>` with `<id>_reverse`:
 
 </details>
 
-## 1. Extract a τ profile
+## 🚀 Usage
+
+### 1. Extract a τ profile
 
 One command per model:
 
@@ -114,7 +167,7 @@ This writes `tau_norm_<model>.json` (+ plots) and prints the per-layer τ peak. 
 JSON is consumed by the eval scripts via `--tau_profile`, which sets the source
 layer to the peak and starts injection at the next layer automatically.
 
-## 2. Run evaluations
+### 2. Run evaluations
 
 Two methods: `--method baseline` and `--method tai`. β (injection strength) is chosen
 once per model via a TempCompass sweep and transferred to the other benchmarks:
@@ -128,7 +181,7 @@ export BETA=...       # from your TempCompass sweep
 <details>
 <summary><b>Per-benchmark commands</b>: TempCompass / TVBench / MVBench / AoTBench</summary>
 
-### TempCompass
+#### TempCompass
 
 ```bash
 # baseline
@@ -143,7 +196,7 @@ python evaluations/eval_tempcompass.py --video_dir $TC_V --data_dir $TC_D \
     --tau_profile $PROFILE --beta $BETA --n_frames 16
 ```
 
-### TVBench
+#### TVBench
 
 ```bash
 python evaluations/eval_tvbench.py --tvbench_dir $TV \
@@ -151,7 +204,7 @@ python evaluations/eval_tvbench.py --tvbench_dir $TV \
     --tau_profile $PROFILE --beta $BETA --n_frames 16
 ```
 
-### MVBench
+#### MVBench
 
 ```bash
 python evaluations/eval_mvbench.py --mvbench_dir $MV \
@@ -159,7 +212,7 @@ python evaluations/eval_mvbench.py --mvbench_dir $MV \
     --tau_profile $PROFILE --beta $BETA --n_frames 16
 ```
 
-### AoTBench
+#### AoTBench
 
 5 tasks, one json each:
 
@@ -173,7 +226,7 @@ done
 
 </details>
 
-### Chaining benchmarks
+### 3. Chaining benchmarks
 
 `bench_chain` from `scripts/bench_helpers.sh` runs several benchmarks back-to-back
 (`--skip_existing` makes re-runs safe):
@@ -186,10 +239,12 @@ bench_chain $MODEL 16 "tc aot tv" --tau_profile $PROFILE --beta $BETA   # TAI
 Results are written as JSON under each `--output_dir`. See the header of
 [tai/tai_core.py](tai/tai_core.py) for the full argument reference.
 
-## Citation
+## 📖 Citation
+
+If this project provided insights or was helpful to your research, please give us a star ⭐ and cite us using:
 
 ```bibtex
-@misc{shin2026before,
+@misc{shin2026arxiv,
       title={Before It Fades: Reinforcing Temporal Representations at Inference Time in VideoLLMs},
       author={Youngwoo Shin and Yusung Ro and Minseo Kim and Junmo Kim},
       year={2026},
@@ -209,4 +264,4 @@ Results are written as JSON under each `--output_dir`. See the header of
 
 ## License
 
-See [LICENSE](LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
